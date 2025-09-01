@@ -12,3 +12,8 @@ chromadb
 llama-index-embeddings-huggingface
 llama-index-vector-stores-postgres
 llama-index-vector-stores-chroma
+langgraph
+IPython
+langfuse
+langchain_ollama
+langchain

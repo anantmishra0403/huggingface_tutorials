@@ -7,69 +7,14 @@ from PIL import Image
 from smolagents import CodeAgent,InferenceClientModel,tool,DuckDuckGoSearchTool,VisitWebpageTool,TransformersModel
 import requests
 from smolagents.models import ChatMessage
-# from huggingface_hub import InferenceClient
+from huggingface_hub import InferenceClient
 
 
-# client = InferenceClient()
+client = InferenceClient()
 
-# class CustomModel(Model):
-#     def generate(messages, stop_sequences=["Task"]):
-#         response = client.chat_completion(messages, stop=stop_sequences, max_tokens=1024)
-#         answer = response.choices[0].message
-#         return answer
+load_dotenv()
 
-# custom_model = CustomModel()
-
-# class OllamaModel(Model):
-#     def __init__(self, model="qwen2:7b", url="http://localhost:11434/api/chat"):
-#         self.model = model
-#         self.url = url
-
-#     def generate(self, messages, stop_sequences=None, **kwargs):
-#         chat_messages = []
-#         for m in messages:
-#             if hasattr(m, "content"):  # ChatMessage
-#                 role = getattr(m, "role", "user")
-#                 content = m.content
-#                 if isinstance(content, list):
-#                     content = " ".join(str(x) for x in content)
-#                 chat_messages.append({"role": role, "content": str(content)})
-#             elif isinstance(m, dict):  # dict
-#                 role = m.get("role", "user")
-#                 content = m.get("content", "")
-#                 if isinstance(content, list):
-#                     content = " ".join(str(x) for x in content)
-#                 chat_messages.append({"role": role, "content": str(content)})
-#             else:
-#                 chat_messages.append({"role": "user", "content": str(m)})
-
-#         payload = {
-#             "model": self.model,
-#             "messages": chat_messages,
-#             "stream": False,
-#         }
-
-#         if stop_sequences:
-#             payload["stop"] = stop_sequences
-
-#         response = requests.post(self.url, json=payload)
-#         if response.status_code != 200:
-#             response.raise_for_status()
-
-#         data = response.json()
-#         # Ollama response is usually in data["message"]["content"]
-#         generated_text = data.get("message", {}).get("content", "")
-
-#         return {
-#             "message": ChatMessage(role="assistant", content=generated_text),
-#             # Must be integers
-#             "token_usage": {"input_tokens": 0, "output_tokens": len(generated_text.split())}
-        # }
-
-
-# load_dotenv()
-
-# login(token = os.getenv("HF_TOKEN"), add_to_git_credential = False)
+login(token = os.getenv("HF_TOKEN"), add_to_git_credential = False)
 
 @tool
 def calculate_cargo_travel_time(origin_coords: Tuple[float, float], destination_coords: Tuple[float, float], cruising_speed_kmh: Optional[float] = 750.0) -> float:
@@ -114,7 +59,7 @@ def calculate_cargo_travel_time(origin_coords: Tuple[float, float], destination_
 print(calculate_cargo_travel_time((41.8781, -87.6298), (-33.8688, 151.2093)))
 
 agent = CodeAgent(
-    model=TransformersModel(),
+    model=InferenceClientModel(),
     tools=[calculate_cargo_travel_time, DuckDuckGoSearchTool(), VisitWebpageTool()],
     additional_authorized_imports = ['pandas'],
     max_steps = 20
